@@ -79,25 +79,38 @@ public class SpringDesafio4Application implements CommandLineRunner{
 		System.out.println("========== DESAFIOS ==============");
 
 		//1 - Dada a lista de números inteiros a seguir, encontre o maior número dela.
+		System.out.println("desafio 1");
 		List<Integer> numeros = Arrays.asList(10, 20, 30, 40, 50);
 		IntSummaryStatistics est = numeros.stream()
 										.collect(Collectors.summarizingInt(Integer::valueOf));
 		System.out.println(est.getMax());
+		//ou solução alura
+		Optional<Integer> maxInt = numeros.stream()
+				.max(Integer::compare);
+		maxInt.ifPresent(System.out::println);
 
+		System.out.println("\ndesafio 2");
 		//2 -Dada a lista de palavras (strings) abaixo, agrupe-as pelo seu tamanho. No código a seguir, há um exemplo prático do resultado esperado.
 		List<String> palavras = Arrays.asList("java", "stream", "lambda", "code");
 		Map<Integer, List<String>> collect = palavras.stream()
-				.collect(Collectors.groupingBy(String::length));
+													.collect(Collectors.groupingBy(String::length));
 		collect.forEach((t, u) -> System.out.print(t+"="+u+", "));
 
-		System.out.println("");
+		//ou solução alura
+		System.out.println("\n"+collect);
 
+		System.out.println("\ndesafio 3");
 		//3 - Dada a lista de nomes abaixo, concatene-os separados por vírgula. No código a seguir, há um exemplo prático do resultado esperado.
 		List<String> nomes = Arrays.asList("Alice", "Bob", "Charlie");
 		nomes.stream()
 			.map(s -> s.concat(","))
 			.forEach(System.out::print);
+		//ou solução alura
+		String resultado = nomes.stream()
+			.collect(Collectors.joining(", "));
+		System.out.println("\n"+resultado);
 
+		System.out.println("\ndesafio 4");
 		//4 - Dada a lista de números inteiros abaixo, calcule a soma dos quadrados dos números pares.
 		List<Integer> numerosDois = Arrays.asList(1, 2, 3, 4, 5, 6);
 		Optional<Integer> retorno =numerosDois.stream()
@@ -110,7 +123,17 @@ public class SpringDesafio4Application implements CommandLineRunner{
 		retorno.ifPresent(System.out::println);
 		retorno.orElseThrow();
 
-		//5 - Filtre todos os produtos da categoria "Eletrônicos" com preço menor que R$ 1000, 
+		System.out.println("\ndesafio 5");
+		//5 - Dada uma lista de números inteiros, separe os números pares dos ímpares.
+		List<Integer> numerosTres = Arrays.asList(1, 2, 3, 4, 5, 6);
+		Map<Boolean, List<Integer>> resultNumTres = numerosTres.stream()
+					.collect(Collectors.partitioningBy(n -> n % 2 == 0));
+		System.out.println("Pares: "+resultNumTres.get(true));
+		System.out.println("Ímnpares: "+resultNumTres.get(false));
+
+
+		System.out.println("\ndesafio x");
+		//x - Filtre todos os produtos da categoria "Eletrônicos" com preço menor que R$ 1000, 
 		//ordene-os pelo preço em ordem crescente e colete o resultado em uma nova lista.
 		List<Produto> produtos = Arrays.asList(
 			new Produto("Smartphone", 800.0, "Eletrônicos"),
@@ -118,6 +141,8 @@ public class SpringDesafio4Application implements CommandLineRunner{
 			new Produto("Teclado", 200.0, "Eletrônicos"),
 			new Produto("Cadeira", 300.0, "Móveis"),
 			new Produto("Monitor", 900.0, "Eletrônicos"),
+			new Produto("Fone de Ouvido", 100.0, "Eletrônicos"),
+            new Produto("Caneta", 5.0, "Papelaria"),
 			new Produto("Mesa", 700.0, "Móveis")
 		);
 
@@ -128,20 +153,38 @@ public class SpringDesafio4Application implements CommandLineRunner{
 				.collect(Collectors.toList());
 		produtosFiltrados.forEach(System.out::println);
 
-		System.out.println("");
+		System.out.println("\ndesafio 6");
 		//6 - Dada a lista de produtos acima, agrupe-os por categoria em um Map<String, List<Produto>>.
 		Map<String,List<Produto>> mapaProdutos = produtos.stream()
 				.collect(Collectors.groupingBy(Produto::getCategoria));
 		mapaProdutos.forEach((k,v) -> System.out.println(k+" "+v));
+		//ou solução alura
+		System.out.println("\n"+mapaProdutos);
 
+		System.out.println("\ndesafio 7");
 		//7 - Dada a lista de produtos acima, conte quantos produtos há em cada categoria e armazene em um Map<String, Long>
 		Map<String, Long> collect2 = produtos.stream()
 				.collect(Collectors.groupingBy(Produto::getCategoria,Collectors.counting()));
 		collect2.forEach((k,v) -> System.out.println(k+" "+v));
+		//ou solução alura
+		System.out.println("\n"+collect2);
 
+		System.out.println("\ndesafio 8");
 		//8 - Dada a lista de produtos acima, encontre o produto mais caro de cada categoria e armazene o resultado em um Map<String, Optional<Produto>>.
-		//produtos.stream()
+		Map<String, Optional<Produto>> collect3 = produtos.stream()
+				.collect(Collectors.groupingBy(Produto::getCategoria,Collectors.maxBy((p1,p2) -> Double.valueOf(p1.getPreco()).compareTo(p2.getPreco()))));
+		collect3.forEach((k,v) -> System.out.println(k+" "+v));
+		//ou solução alura
+		Map<String,Optional<Produto>> collect3alura = produtos.stream()
+				.collect(Collectors.groupingBy(Produto::getCategoria,Collectors.maxBy(Comparator.comparingDouble(Produto::getPreco))));
+		System.out.println("\n"+collect3alura);
 
+		System.out.println("\ndesafio 9");
 		//9 - Dada a lista de produtos acima, calcule o total dos preços dos produtos em cada categoria e armazene o resultado em um Map<String, Double>.
+		Map<String,Double> collect4 = produtos.stream()
+				.collect(Collectors.groupingBy(Produto::getCategoria,Collectors.summingDouble(Produto::getPreco)));
+		collect4.forEach((k,v) -> System.out.println(k+" "+v));
+		//ou solução alura
+		System.out.println("\n"+collect4);
 	}
 }
